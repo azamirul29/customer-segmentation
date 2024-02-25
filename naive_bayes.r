@@ -1,0 +1,12 @@
+install.packages("e1071")
+library(e1071)
+encoded_data <- model.matrix(~ . - 1, data = customer[, c('Gender', 'Ever_Married', 'Graduated', 'Profession', 'Spending_Score', 'Var_1')])
+target_variable <- customer$Segmentation
+naive_bayes_model <- naiveBayes(encoded_data, as.factor(target_variable))
+predicted_values <- predict(naive_bayes_model,newdata = encoded_data)
+confusion_matrix <- table(predicted_values,actual_values)
+accuracy <- sum(diag(confusion_matrix))/ sum(confusion_matrix)
+barplot(confusion_matrix, beside = TRUE, legend.text = TRUE, col = c("lightblue", "lightgreen", "lightcoral", "lightyellow"))
+print("Confusion Matrix:")
+print(confusion_matrix)
+print(paste("Accuracy:", round(accuracy, 2)))
